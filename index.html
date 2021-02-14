@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" class="has-background-grey-dark">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/bulma.min.css">
+  <title>Stop Clock</title>
+</head>
+<body >
+  <div class="container mt-5">
+    <div class="columns">
+      <div class="column is-6-widescreen is-8-tablet is-offset-3-widescreen is-offset-2-tablet">
+        <div class="card has-background-warning">
+          <header class="">
+            <div class="tabs is-centered">
+              <ul>
+                <li class=""><a class="clock-btn has-icons-left">
+                  <span class="icon"><i class="fas fa-clock fa-lg"></i></span>
+                  Clock 
+                </a></li>
+                <li><a class="stopwatch-btn has-icons-left">
+                  <span class="icon"><i class="fas fa-stopwatch fa-lg"></i></span>
+                  Stopwatch
+                </a></li>
+                <li><a class="timer-btn has-icons-left">
+                  <span class="icon"><i class="far fa-clock fa-lg"></i></span>
+                  Timer
+                </a></li>
+                <li><a>Others</a></li>
+              </ul>
+            </div>
+          </header>
+
+          <div class="card-content has-text-centered">
+            <p class="title is-1 is-inline-block">
+              <span id="hours">00</span> : <span id="minutes">00</span> : <span id="seconds">00</span>
+            </p>
+            <div class="">
+              <span class="icon is-hidden" id="play-btn">
+                <a>
+                  <i class="fas fa-play-circle fa-3x has-text-link"></i>
+                </a>
+              </span>
+              <span class="icon is-hidden" id="pause-btn">
+                <a>
+                  <i class="fas fa-pause-circle fa-3x has-text-link"></i>
+                </a>
+              </span>
+            </div>
+          </div>
+
+          <footer class="card-footer px-5 py-3 is-flex is-flex-direction-column is-align-items-center">
+            <p class="">
+              <a href="github.com" class="icon is-medium has-text-grey-dark"><i class="fab fa-github fa-lg"></i></a>
+              <a href="twitter.com" class="icon is-medium has-text-grey-dark"><i class="fab fa-twitter fa-lg"></i></a>
+              <a href="dev.to" class="has-text-grey-dark icon is-medium"><i class="fab fa-dev fa-lg"></i></a>
+            </p>
+            <small class="">
+              Oncogene Studios &copy; 2020
+            </small>
+          </footer>
+        </div>
+
+        <div class="content is-small has-text-centered mt-5">
+          <p class="subtitle has-text-white">Made with</p>
+          
+          <p class="has-text-warning-dark subtitle is-4 mb-5">
+            <img src="img/bulma-logo.png" alt="bulma" class="mr-5" width= 100>
+            <span class="m3">Vanilla</span>
+            <span class="icon mt-3"><i class="fab fa-js-square"></i></span>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <script defer src="js/fontawesome5_all.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
