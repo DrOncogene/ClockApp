@@ -141,6 +141,7 @@ const clockCtrl = (function(){
   const timerState = function(){
     clearInterval(intervalIds.stopwatchId);
     clearInterval(intervalIds.clockId);
+    intervalIds.timerId = null;
     UICtrl.showOutput('00','00','00');
     UICtrl.UIElements.clockBtn.parentElement.classList.remove('is-active');
     UICtrl.UIElements.stopwatchBtn.parentElement.classList.remove('is-active');
@@ -183,15 +184,16 @@ const clockCtrl = (function(){
           };
         }; 
       } else if (second === 0){
-        if (minute !== 0 || hour !== 0){
+        if (minute !== 0 && hour !== 0){
           second = 59;
-          if (minute !== 0){
-            minute -= 1;
-          };
-          if (minute == 0 && hour !== 0){
-            minute = 59;
-            hour -= 1;
-          };
+          minute -= 1;
+          
+        } else if (minute === 0 && hour !== 0){
+          minute = 59;
+          hour -= 1;
+        } else if (minute !== 0 && hour === 0){
+          second = 59;
+          minute -= 1;
         };
       };
     };
@@ -217,6 +219,8 @@ const clockCtrl = (function(){
       UICtrl.showOutput('00','00','00');
     } else if (UICtrl.UIElements.playBtn.classList.contains('is-hidden')){
       clearInterval(intervalIds.stopwatchId);
+      clearInterval(intervalIds.timerId);
+      intervalIds.timerId = null;
       UICtrl.show(UICtrl.UIElements.playBtn);
       UICtrl.hide(UICtrl.UIElements.pauseBtn);
       UICtrl.showOutput('00','00','00');
@@ -279,7 +283,12 @@ const App = (function(UICtrl, clockCtrl){
 
     UICtrl.UIElements.pauseBtn.addEventListener('click', (e) => {
       if (e.target.hasAttribute('fill') || e.target.classList.contains('fa-pause-circle')){
-        clearInterval(clockCtrl.intervalIds.stopwatchId);
+        if (UI.state === 'stopwatch'){
+          clearInterval(clockCtrl.intervalIds.stopwatchId);
+        } else if (UI.state === 'timer'){
+          clearInterval(clockCtrl.intervalIds.timerId);
+          clockCtrl.intervalIds.timerId = null;
+        }
         UICtrl.hide(UICtrl.UIElements.pauseBtn);
         UICtrl.show(UICtrl.UIElements.playBtn);
         clockCtrl.pause();
@@ -294,20 +303,22 @@ const App = (function(UICtrl, clockCtrl){
 
     UICtrl.UIElements.arrowBtns.forEach((arrow)=>{
       arrow.addEventListener('click', (e)=>{
-        if (e.target.hasAttribute('fill') && e.target.parentElement.classList.contains('fa-sort-up')){
-          let output = parseInt(e.target.parentElement.parentElement.previousElementSibling.textContent);
-          output += 1;
-          e.target.parentElement.parentElement.previousElementSibling.textContent = `0${output.toString()}`;
-        } else if (e.target.hasAttribute('fill') && e.target.parentElement.classList.contains('fa-sort-down')){
-          let output = parseInt(e.target.parentElement.parentElement.previousElementSibling.textContent);
-          if (output > 0){
-            output -= 1;
-          }
-          e.target.parentElement.parentElement.previousElementSibling.textContent = `0${output.toString()}`;
-        }
-      })
-    })
-  }
+        if (clockCtrl.intervalIds.timerId === null){
+          if (e.target.hasAttribute('fill') && e.target.parentElement.classList.contains('fa-sort-up')){
+            let output = parseInt(e.target.parentElement.parentElement.previousElementSibling.textContent);
+            output += 1;
+            e.target.parentElement.parentElement.previousElementSibling.textContent = `0${output.toString()}`;
+          } else if (e.target.hasAttribute('fill') && e.target.parentElement.classList.contains('fa-sort-down')){
+            let output = parseInt(e.target.parentElement.parentElement.previousElementSibling.textContent);
+            if (output > 0){
+              output -= 1;
+            }
+            e.target.parentElement.parentElement.previousElementSibling.textContent = `0${output.toString()}`;
+          };
+        };
+      });
+    });
+  };
 
   return {
     init: function(){
