@@ -7,7 +7,10 @@ const UICtrl = (function (){
     minutes: document.querySelector('#minutes'),
     seconds: document.querySelector('#seconds'),
     playBtn: document.querySelector('#play-btn'),
-    pauseBtn: document.querySelector('#pause-btn')
+    pauseBtn: document.querySelector('#pause-btn'),
+    restartBtn: document.querySelector('#restart-btn'),
+    colons: document.querySelectorAll('.colon'),
+    arrowBtns: document.querySelectorAll('.arrows'),
   };
 
   const UI = function(state = 'clock'){
@@ -18,7 +21,6 @@ const UICtrl = (function (){
     changeState(newState){
       this.state = newState;
       if (this.state === 'clock'){
-        clearInterval(clockCtrl.intervalIds.stopwatchId);
         clockCtrl.homeState();
         const id = setInterval(() => {
           clockCtrl.homeState();
@@ -63,12 +65,40 @@ const UICtrl = (function (){
     btn.classList.add('is-hidden');
   };
 
+  const showArrows = function(){
+    UICtrl.UIElements.arrowBtns.forEach((arrowBtn)=>{
+      show(arrowBtn);
+    });
+  };
+
+  const hideArrows = function(){
+    UICtrl.UIElements.arrowBtns.forEach((arrowBtn)=>{
+      hide(arrowBtn);
+    });
+  };
+
+  const showColons = function(){
+    UICtrl.UIElements.colons.forEach((colon)=>{
+      show(colon);
+    });
+  };
+
+  const hideColons = function(){
+    UICtrl.UIElements.colons.forEach((colon)=>{
+      hide(colon);
+    });
+  };
+
   return {
     UIElements,
     UI,
     showOutput,
     show,
     hide,
+    showArrows,
+    hideArrows,
+    showColons,
+    hideColons,
   }
 })();
 
@@ -76,6 +106,8 @@ const clockCtrl = (function(){
   const intervalIds = {};
 
   const homeState = function(){
+    clearInterval(intervalIds.stopwatchId);
+    clearInterval(intervalIds.timerId);
     const today = new Date();
     const currentHour = today.getHours().toString();
     const currentMinute = today.getMinutes().toString();
@@ -84,32 +116,86 @@ const clockCtrl = (function(){
     UICtrl.showOutput(currentHour, currentMinute, currentSecond);
     UICtrl.UIElements.clockBtn.parentElement.classList.add('is-active');
     UICtrl.UIElements.stopwatchBtn.parentElement.classList.remove('is-active');
+    UICtrl.UIElements.timerBtn.parentElement.classList.remove('is-active');
     UICtrl.hide(UICtrl.UIElements.playBtn);
     UICtrl.hide(UICtrl.UIElements.pauseBtn);
+    UICtrl.hide(UICtrl.UIElements.restartBtn);
+    UICtrl.showColons();
+    UICtrl.hideArrows();
   };
 
   const stopwatchState = function(){
     clearInterval(intervalIds.clockId);
+    clearInterval(intervalIds.timerId);
     UICtrl.UIElements.clockBtn.parentElement.classList.remove('is-active');
+    UICtrl.UIElements.timerBtn.parentElement.classList.remove('is-active');
     UICtrl.UIElements.stopwatchBtn.parentElement.classList.add('is-active');
     UICtrl.showOutput('00','00','00');
     UICtrl.show(UICtrl.UIElements.playBtn);
+    UICtrl.hide(UICtrl.UIElements.pauseBtn);
+    UICtrl.show(UICtrl.UIElements.restartBtn);
+    UICtrl.showColons();
+    UICtrl.hideArrows();
   };
 
-  const playStopwatch = function (){
+  const timerState = function(){
+    clearInterval(intervalIds.stopwatchId);
+    clearInterval(intervalIds.clockId);
+    UICtrl.showOutput('00','00','00');
+    UICtrl.UIElements.clockBtn.parentElement.classList.remove('is-active');
+    UICtrl.UIElements.stopwatchBtn.parentElement.classList.remove('is-active');
+    UICtrl.UIElements.timerBtn.parentElement.classList.add('is-active');
+    UICtrl.show(UICtrl.UIElements.playBtn);
+    UICtrl.hide(UICtrl.UIElements.pauseBtn);
+    UICtrl.show(UICtrl.UIElements.restartBtn);
+    UICtrl.showArrows();
+    UICtrl.hideColons();
+  };
+
+  const play = function (state){
     let second = parseInt(UICtrl.UIElements.seconds.textContent);
     let minute = parseInt(UICtrl.UIElements.minutes.textContent);
     let hour = parseInt(UICtrl.UIElements.hours.textContent);
-    second += 1;
 
-    if (second === 60){
-      second = 0;
-      minute += 1;
-    } else if (minute === 60){
-      minute = 0;
-      hour += 1;
-    }
+    if (state === 'stopwatch'){
+      second += 1;
 
+      if (second === 60){
+        second = 0;
+        minute += 1;
+      } else if (minute === 60){
+        minute = 0;
+        hour += 1;
+      };
+    } else if (state === 'timer'){
+      if (second === 0 && minute === 0 && hour === 0){
+        clearInterval(intervalIds.timerId);
+        UICtrl.show(UICtrl.UIElements.playBtn);
+        UICtrl.hide(UICtrl.UIElements.pauseBtn);
+      } else if (second !== 0){
+        second -= 1;
+        if (second === 0 && minute !== 0){
+          second = 59;
+          minute -= 1;
+          if (minute == 0 && hour !== 0){
+            minute = 59;
+            hour -= 1;
+          };
+        }; 
+      } else if (second === 0){
+        if (minute !== 0 || hour !== 0){
+          second = 59;
+          if (minute !== 0){
+            minute -= 1;
+          };
+          if (minute == 0 && hour !== 0){
+            minute = 59;
+            hour -= 1;
+          };
+        };
+      };
+    };
+    
     second = second.toString();
     minute = minute.toString();
     hour = hour.toString();
@@ -123,14 +209,29 @@ const clockCtrl = (function(){
     let hour = UICtrl.UIElements.hours.textContent;
     
     UICtrl.showOutput(hour, minute, second);
+  };
+
+  const restart = function(){
+    if (UICtrl.UIElements.pauseBtn.classList.contains('is-hidden')){
+      // clearInterval(intervalIds.stopwatchId);
+      UICtrl.showOutput('00','00','00');
+    } else if (UICtrl.UIElements.playBtn.classList.contains('is-hidden')){
+      clearInterval(intervalIds.stopwatchId);
+      UICtrl.show(UICtrl.UIElements.playBtn);
+      UICtrl.hide(UICtrl.UIElements.pauseBtn);
+      UICtrl.showOutput('00','00','00');
+    }
+    
   }
 
   return {
     homeState,
     stopwatchState,
+    timerState,
     intervalIds,
-    playStopwatch,
+    play,
     pause,
+    restart,
   }
 })();
 
@@ -150,6 +251,12 @@ const App = (function(UICtrl, clockCtrl){
       }
     });
 
+    UICtrl.UIElements.timerBtn.addEventListener('click', ()=>{
+      if (UI.state !== 'timer'){
+        UI.changeState('timer');
+      }
+    });
+
     UICtrl.UIElements.playBtn.addEventListener('click', (e)=>{
       if (e.target.hasAttribute('fill') || e.target.classList.contains('fa-play-circle')){
         UICtrl.hide(UICtrl.UIElements.playBtn);
@@ -157,13 +264,16 @@ const App = (function(UICtrl, clockCtrl){
         let id;
         if (UI.state === 'stopwatch'){
           id = setInterval(function(){
-            clockCtrl.playStopwatch();
+            clockCtrl.play(UI.state);
             console.log(clockCtrl.intervalIds)
           }, 1000);
+          clockCtrl.intervalIds.stopwatchId = id;
         } else if (UI.state === 'timer'){
-
+          id = setInterval(function(){
+            clockCtrl.play(UI.state);
+          }, 1000);
+          clockCtrl.intervalIds.timerId = id;
         };
-        clockCtrl.intervalIds.stopwatchId = id;
       };
     });
 
@@ -175,6 +285,28 @@ const App = (function(UICtrl, clockCtrl){
         clockCtrl.pause();
       };
     });
+
+    UICtrl.UIElements.restartBtn.addEventListener('click', (e)=>{
+      if (e.target.hasAttribute('fill') || e.target.classList.contains('fa-sync-alt')){
+        clockCtrl.restart();
+      };
+    });
+
+    UICtrl.UIElements.arrowBtns.forEach((arrow)=>{
+      arrow.addEventListener('click', (e)=>{
+        if (e.target.hasAttribute('fill') && e.target.parentElement.classList.contains('fa-sort-up')){
+          let output = parseInt(e.target.parentElement.parentElement.previousElementSibling.textContent);
+          output += 1;
+          e.target.parentElement.parentElement.previousElementSibling.textContent = `0${output.toString()}`;
+        } else if (e.target.hasAttribute('fill') && e.target.parentElement.classList.contains('fa-sort-down')){
+          let output = parseInt(e.target.parentElement.parentElement.previousElementSibling.textContent);
+          if (output > 0){
+            output -= 1;
+          }
+          e.target.parentElement.parentElement.previousElementSibling.textContent = `0${output.toString()}`;
+        }
+      })
+    })
   }
 
   return {

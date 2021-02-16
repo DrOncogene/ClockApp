@@ -6,6 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/bulma.min.css">
   <title>Stop Clock</title>
+  <style>
+    svg.fa-sort-up, svg.fa-sort-down{
+      height: 20px;
+      margin-top: -10px;
+    }
+    .is-inline-flex{
+      vertical-align: middle;
+    }
+  </style>
 </head>
 <body >
   <div class="container mt-5">
@@ -27,25 +36,40 @@
                   <span class="icon"><i class="far fa-clock fa-lg"></i></span>
                   Timer
                 </a></li>
-                <li><a>Others</a></li>
               </ul>
             </div>
           </header>
 
           <div class="card-content has-text-centered">
             <p class="title is-1 is-inline-block">
-              <span id="hours">00</span> : <span id="minutes">00</span> : <span id="seconds">00</span>
-            </p>
-            <div class="">
-              <span class="icon is-hidden" id="play-btn">
-                <a>
-                  <i class="fas fa-play-circle fa-3x has-text-link"></i>
-                </a>
+              
+              <span id="hours">00</span>
+              <span class="is-small is-inline-flex is-flex-direction-column is-hidden arrows">
+                <i class="fas fa-sort-up fa-xs is-clickable"></i>
+                <i class="fas fa-sort-down fa-xs is-clickable"></i>
               </span>
-              <span class="icon is-hidden" id="pause-btn">
-                <a>
-                  <i class="fas fa-pause-circle fa-3x has-text-link"></i>
-                </a>
+              <span class="colon">:</span> 
+              <span id="minutes">00</span>
+              <span class="is-small is-inline-flex is-flex-direction-column is-hidden arrows">
+                <i class="fas fa-sort-up fa-xs is-clickable"></i>
+                <i class="fas fa-sort-down fa-xs is-clickable"></i>
+              </span>
+              <span class="colon">:</span>
+              <span id="seconds">00</span>
+              <span class="is-small is-inline-flex is-flex-direction-column is-hidden arrows">
+                <i class="fas fa-sort-up fa-xs is-clickable"></i>
+                <i class="fas fa-sort-down fa-xs is-clickable"></i>
+              </span>
+            </p>
+            <div class="mt-5">
+              <span class="icon is-clickable is-hidden mr-5 has-text-link" id="play-btn">
+                  <i class="fas fa-play-circle fa-3x"></i>
+              </span>
+              <span class="icon is-clickable is-hidden mr-5 has-text-link" id="pause-btn">
+                <i class="fas fa-pause-circle fa-3x"></i>
+              </span>
+              <span class="icon is-clickable is-hidden ml-3 has-text-link" id="restart-btn">
+                <i class="fas fa-sync-alt fa-3x"></i>
               </span>
             </div>
           </div>
