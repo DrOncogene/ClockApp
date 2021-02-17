@@ -339,7 +339,7 @@ const App = (function(UICtrl, clockCtrl){
   return {
     init: function(){
       loadEventListners();
-
+      
       if (UI.state === 'clock'){
         clockCtrl.homeState();
         const id = setInterval(() => {
@@ -349,12 +349,11 @@ const App = (function(UICtrl, clockCtrl){
         }, 1000);
       } else if (UI.state === 'stopwatch'){
         clockCtrl.stopwatchState();
-      } else {
-
+      } else if (UI.state === 'timer'){
+        clockCtrl.timerState();
       };
-      
     }
-  }
+  };
 })(UICtrl, clockCtrl);
 
 App.init();
