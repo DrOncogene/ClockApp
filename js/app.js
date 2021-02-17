@@ -103,7 +103,12 @@ const UICtrl = (function (){
 })();
 
 const clockCtrl = (function(){
-  const intervalIds = {};
+  const intervalIds = {
+    clockId: 0,
+    stopwatchId: 0,
+    timerId: null,
+    timerPaused: false,
+  };
 
   const homeState = function(){
     clearInterval(intervalIds.stopwatchId);
@@ -141,7 +146,6 @@ const clockCtrl = (function(){
   const timerState = function(){
     clearInterval(intervalIds.stopwatchId);
     clearInterval(intervalIds.clockId);
-    intervalIds.timerId = null;
     UICtrl.showOutput('00','00','00');
     UICtrl.UIElements.clockBtn.parentElement.classList.remove('is-active');
     UICtrl.UIElements.stopwatchBtn.parentElement.classList.remove('is-active');
@@ -171,24 +175,31 @@ const clockCtrl = (function(){
     } else if (state === 'timer'){
       if (second === 0 && minute === 0 && hour === 0){
         clearInterval(intervalIds.timerId);
+        intervalIds.timerId = null;
         UICtrl.show(UICtrl.UIElements.playBtn);
         UICtrl.hide(UICtrl.UIElements.pauseBtn);
       } else if (second !== 0){
+        UICtrl.hide(UICtrl.UIElements.playBtn);
+        UICtrl.show(UICtrl.UIElements.pauseBtn);
         second -= 1;
         if (second === 0 && minute !== 0){
           second = 59;
           minute -= 1;
-          if (minute == 0 && hour !== 0){
+        } else if (second === 0 && minute === 0){
+          if (hour !== 0){
+            second = 59;
             minute = 59;
             hour -= 1;
           };
         }; 
       } else if (second === 0){
+        UICtrl.hide(UICtrl.UIElements.playBtn);
+        UICtrl.show(UICtrl.UIElements.pauseBtn);
         if (minute !== 0 && hour !== 0){
           second = 59;
           minute -= 1;
-          
         } else if (minute === 0 && hour !== 0){
+          second = 59;
           minute = 59;
           hour -= 1;
         } else if (minute !== 0 && hour === 0){
@@ -263,20 +274,24 @@ const App = (function(UICtrl, clockCtrl){
 
     UICtrl.UIElements.playBtn.addEventListener('click', (e)=>{
       if (e.target.hasAttribute('fill') || e.target.classList.contains('fa-play-circle')){
-        UICtrl.hide(UICtrl.UIElements.playBtn);
-        UICtrl.show(UICtrl.UIElements.pauseBtn);
         let id;
         if (UI.state === 'stopwatch'){
+          UICtrl.hide(UICtrl.UIElements.playBtn);
+          UICtrl.show(UICtrl.UIElements.pauseBtn);
           id = setInterval(function(){
             clockCtrl.play(UI.state);
             console.log(clockCtrl.intervalIds)
           }, 1000);
           clockCtrl.intervalIds.stopwatchId = id;
         } else if (UI.state === 'timer'){
-          id = setInterval(function(){
-            clockCtrl.play(UI.state);
-          }, 1000);
-          clockCtrl.intervalIds.timerId = id;
+          if (clockCtrl.intervalIds.timerId === null){
+            clockCtrl.intervalIds.timerPaused = false;
+            id = setInterval(function(){
+              clockCtrl.play(UI.state);
+            }, 1000);
+            clockCtrl.intervalIds.timerId = id;
+          };
+          
         };
       };
     });
@@ -288,6 +303,7 @@ const App = (function(UICtrl, clockCtrl){
         } else if (UI.state === 'timer'){
           clearInterval(clockCtrl.intervalIds.timerId);
           clockCtrl.intervalIds.timerId = null;
+          clockCtrl.intervalIds.timerPaused = true;
         }
         UICtrl.hide(UICtrl.UIElements.pauseBtn);
         UICtrl.show(UICtrl.UIElements.playBtn);
@@ -303,7 +319,7 @@ const App = (function(UICtrl, clockCtrl){
 
     UICtrl.UIElements.arrowBtns.forEach((arrow)=>{
       arrow.addEventListener('click', (e)=>{
-        if (clockCtrl.intervalIds.timerId === null){
+        if (clockCtrl.intervalIds.timerId === null && clockCtrl.intervalIds.timerPaused === false){
           if (e.target.hasAttribute('fill') && e.target.parentElement.classList.contains('fa-sort-up')){
             let output = parseInt(e.target.parentElement.parentElement.previousElementSibling.textContent);
             output += 1;
