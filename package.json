@@ -1,0 +1,20 @@
+{
+  "name": "ClockApp",
+  "version": "1.0.0",
+  "description": "A simple clock application with 3 states; a regular clock, a stopwatch and a timer state.\r Built with [bulma css framework](bulma.io) and vanilla JS.\r Used the revealing module and state patterns with 3 IIFEs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DrOncogene/ClockApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DrOncogene/ClockApp/issues"
+  },
+  "homepage": "https://github.com/DrOncogene/ClockApp#readme"
+}
