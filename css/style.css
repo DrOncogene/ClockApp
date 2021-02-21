@@ -1,0 +1,67 @@
+svg.fa-sort-up, svg.fa-sort-down{
+  height: 20px;
+  margin-top: -10px;
+}
+.arrows, #toggle-on, #toggle-off{
+  vertical-align: middle;
+}
+#toggle-on, #toggle-off{
+  transition: all ease 5s;
+}
+.analogue-clock{
+  width: 250px;
+  height: 250px;
+  border: 1px solid #423442;
+  margin: 1rem auto;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0px 0px 30px 10px #293A52;
+  background: url(/img/clockface\ 2.jpeg) center center no-repeat;
+  /* background-clip: border-box; */
+  background-size: cover;
+}
+span#circle{
+  position: absolute;
+  bottom: 50%;
+  right: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  transform: translate(50%, 50%);
+  background: #333;
+  z-index: 4;
+}
+.hands{
+  position: absolute;
+  box-shadow: 0px 0px 5px 1px #423442;
+}
+#analogue-hour{
+  height: 4rem;
+  width: 0.1rem;
+  background: #333;
+  bottom: 50%;
+  right: 50%;
+  transform-origin: 50% 3rem;
+  /* transform: translate(50%, 1rem); */
+  z-index: 3;
+}
+#analogue-minute{
+  height: 5rem;
+  width: 0.1rem;
+  background: rgb(219, 30, 30);
+  bottom: 50%;
+  right: 50%;
+  transform-origin: 50% 4rem;
+  /* transform: translate(50%, 1rem); */
+  z-index: 2;
+}
+#analogue-second{
+  height: 6rem;
+  width: 0.1rem;
+  background: rgb(173, 238, 21);
+  bottom: 50%;
+  right: 50%;
+  transform-origin: 50% 5rem;
+  /* transform: translate(50%, 1rem); */
+  z-index: 1;
+}

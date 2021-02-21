@@ -13,6 +13,14 @@ const UICtrl = (function (){
     resetBtn: document.querySelector('#restart-btn'),
     colons: document.querySelectorAll('.colon'),
     arrowBtns: document.querySelectorAll('.arrows'),
+    digitalClock: document.getElementById('digital-clock'),
+    analogueClock: document.querySelector('.analogue-clock'),
+    analogueToggle: document.querySelector('.analogue-toggle'),
+    analogueToggleOff: document.querySelector('#toggle-off'),
+    analogueToggleOn: document.querySelector('#toggle-on'),
+    secondHand: document.getElementById('analogue-second'),
+    minuteHand: document.getElementById('analogue-minute'),
+    hourHand: document.getElementById('analogue-hour'),
   };
 
   // UI class constructor with a single property 'state'. The default state is 'clock'
@@ -141,15 +149,43 @@ const clockCtrl = (function(){
     UICtrl.UIElements.clockBtn.parentElement.classList.add('is-active');
     UICtrl.UIElements.stopwatchBtn.parentElement.classList.remove('is-active');
     UICtrl.UIElements.timerBtn.parentElement.classList.remove('is-active');
-    // Hides all the buttons
+    // Hide all the buttons
     UICtrl.hide(UICtrl.UIElements.playBtn);
     UICtrl.hide(UICtrl.UIElements.pauseBtn);
     UICtrl.hide(UICtrl.UIElements.resetBtn);
+    // Hide analogue clock
+    UICtrl.hide(UICtrl.UIElements.analogueClock);
+    // show analogue toggle
+    UICtrl.show(UICtrl.UIElements.analogueToggle);
+    UICtrl.show(UICtrl.UIElements.analogueToggleOff);
+    UICtrl.hide(UICtrl.UIElements.analogueToggleOn);
     // Shows the colons in case they have been hidden when switching over from the timer state where they are hidden. Same for the hideArrows().
     UICtrl.showColons();
     UICtrl.hideArrows();
+
   };
 
+  const playAnalogueClock = function(){
+    const today = new Date();
+    const second = today.getSeconds();
+    const minute = today.getMinutes();
+    const hour = today.getHours();
+  
+    const secondDeg = second * 6;
+    const minuteDeg = (minute * 6) + (1/60)*secondDeg;
+    const hourDeg = ((hour%12) * 30) + (1/12)*minuteDeg;
+  
+    console.log(secondDeg, minuteDeg, hourDeg);
+  
+    UICtrl.UIElements.secondHand.style.transition = 'all ease 0.5s';
+    if (secondDeg === 0 || secondDeg === 360){
+      UICtrl.UIElements.secondHand.style.transition = 'none';
+    };
+    
+    UICtrl.UIElements.secondHand.style.transform = `translate(50%, 1rem) rotate(${secondDeg}deg)`;
+    UICtrl.UIElements.minuteHand.style.transform = `translate(50%, 1rem) rotate(${minuteDeg}deg)`;
+    UICtrl.UIElements.hourHand.style.transform = `translate(50%, 1rem) rotate(${hourDeg}deg)`;
+  };
   // An stopwatchState function that is called when the app state is 'stopwatch'
   const stopwatchState = function(){
      // Clears the intervals of the other app states, if they're currently set.
@@ -165,6 +201,10 @@ const clockCtrl = (function(){
     UICtrl.show(UICtrl.UIElements.playBtn);
     UICtrl.hide(UICtrl.UIElements.pauseBtn);
     UICtrl.show(UICtrl.UIElements.resetBtn);
+    // hide analogue toggle and analogue clock if shown from home state and show digital output
+    UICtrl.hide(UICtrl.UIElements.analogueClock);
+    UICtrl.hide(UICtrl.UIElements.analogueToggle);
+    UICtrl.show(UICtrl.UIElements.digitalClock);
     // Shows the colons in case they have been hidden when switching over from the timer state where they are hidden. Same for the hideArrows().
     UICtrl.showColons();
     UICtrl.hideArrows();
@@ -185,6 +225,10 @@ const clockCtrl = (function(){
     UICtrl.show(UICtrl.UIElements.playBtn);
     UICtrl.hide(UICtrl.UIElements.pauseBtn);
     UICtrl.show(UICtrl.UIElements.resetBtn);
+     // hide analogue toggle and analogue clock if shown from home state and show digital output
+     UICtrl.hide(UICtrl.UIElements.analogueClock);
+     UICtrl.hide(UICtrl.UIElements.analogueToggle);
+     UICtrl.show(UICtrl.UIElements.digitalClock);
     // Shows the colons in case they have been hidden when switching over from the timer state where they are hidden. Same for the hideArrows().
     UICtrl.showArrows();
     UICtrl.hideColons();
@@ -298,6 +342,7 @@ const clockCtrl = (function(){
     timerState,
     intervalIds,
     play,
+    playAnalogueClock,
     pause,
     reset,
   }
@@ -407,6 +452,48 @@ const App = (function(UICtrl, clockCtrl){
           e.target.parentElement.parentElement.previousElementSibling.textContent = output;
         };
       });
+    });
+    // Anaglogue toggle event listener
+    UICtrl.UIElements.analogueToggle.addEventListener('click', (e)=>{
+      if (e.target.hasAttribute('fill') || e.target.classList.contains('fa-toggle-off')){
+        // show analogue clock
+        UICtrl.show(UICtrl.UIElements.analogueClock);
+        // hide digital clock
+        UICtrl.hide(UICtrl.UIElements.digitalClock);
+        // hide toggle off button
+        UICtrl.hide(UICtrl.UIElements.analogueToggleOff);
+        // show toggle on
+        UICtrl.show(UICtrl.UIElements.analogueToggleOn);
+        // clear the digital clock interval
+        clearInterval(clockCtrl.intervalIds.clockId);
+        // set analogue clock interval
+        setTimeout(function run(){
+          clockCtrl.playAnalogueClock();
+          const id = setTimeout (function(){
+            run();
+          }, 1000);
+          clockCtrl.intervalIds.clockId = id;
+        }, 0);
+      } else if (e.target.hasAttribute('fill') || e.target.classList.contains('fa-toggle-on')){
+        // hide analogue clock
+        UICtrl.hide(UICtrl.UIElements.analogueClock);
+        // show digital
+        UICtrl.show(UICtrl.UIElements.digitalClock);
+        // show toggle off
+        UICtrl.show(UICtrl.UIElements.analogueToggleOff);
+        // hide toggle on
+        UICtrl.hide(UICtrl.UIElements.analogueToggleOn);
+        // clear the digital clock interval
+        clearInterval(clockCtrl.intervalIds.clockId);
+        // set analogue clock interval
+        setTimeout(function run(){
+          clockCtrl.homeState();
+          const id = setTimeout (function(){
+            run();
+          }, 1000);
+          clockCtrl.intervalIds.clockId = id;
+        }, 0);
+      }
     });
   };
 

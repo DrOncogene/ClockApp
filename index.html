@@ -5,16 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/bulma.min.css">
+  <link rel="stylesheet" href="css/style.css">
   <title>Stop Clock</title>
-  <style>
-    svg.fa-sort-up, svg.fa-sort-down{
-      height: 20px;
-      margin-top: -10px;
-    }
-    .arrows{
-      vertical-align: middle;
-    }
-  </style>
 </head>
 <body >
   <div class="container mt-5">
@@ -41,7 +33,13 @@
           </header>
 
           <div class="card-content has-text-centered is-unselectable">
-            <p class="title is-1 is-inline-block">
+            <div class="analogue-clock">
+              <span id="circle"></span>
+              <span class="hands" id="analogue-hour"></span>
+              <span class="hands" id="analogue-minute"></span>
+              <span class="hands" id="analogue-second"></span>
+            </div>
+            <p class="title is-1 is-inline-block" id="digital-clock">
               <span id="hours">00</span>
               <span class="is-small is-inline-flex is-flex-direction-column is-hidden arrows">
                 <i class="fas fa-sort-up fa-sm is-clickable"></i>
@@ -71,6 +69,11 @@
                 <i class="fas fa-sync-alt fa-3x"></i>
               </span>
             </div>
+            <p class="analogue-toggle is-hidden">
+              <span class="icon has-text-link is-clickable" id="toggle-off"><i class="fas fa-toggle-off"></i></span>
+              <span class="icon has-text-link is-clickable is-hidden" id="toggle-on"><i class="fas fa-toggle-on"></i></span>
+              <span class="is-font-weight-bold">Analogue</span>
+            </p>
           </div>
 
           <footer class="card-footer px-5 py-3 is-flex is-flex-direction-column is-align-items-center is-unselectable">
