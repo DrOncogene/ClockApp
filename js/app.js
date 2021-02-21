@@ -164,28 +164,7 @@ const clockCtrl = (function(){
     UICtrl.hideArrows();
 
   };
-
-  const playAnalogueClock = function(){
-    const today = new Date();
-    const second = today.getSeconds();
-    const minute = today.getMinutes();
-    const hour = today.getHours();
   
-    const secondDeg = second * 6;
-    const minuteDeg = (minute * 6) + (1/60)*secondDeg;
-    const hourDeg = ((hour%12) * 30) + (1/12)*minuteDeg;
-  
-    console.log(secondDeg, minuteDeg, hourDeg);
-  
-    UICtrl.UIElements.secondHand.style.transition = 'all ease 0.5s';
-    if (secondDeg === 0 || secondDeg === 360){
-      UICtrl.UIElements.secondHand.style.transition = 'none';
-    };
-    
-    UICtrl.UIElements.secondHand.style.transform = `translate(50%, 1rem) rotate(${secondDeg}deg)`;
-    UICtrl.UIElements.minuteHand.style.transform = `translate(50%, 1rem) rotate(${minuteDeg}deg)`;
-    UICtrl.UIElements.hourHand.style.transform = `translate(50%, 1rem) rotate(${hourDeg}deg)`;
-  };
   // An stopwatchState function that is called when the app state is 'stopwatch'
   const stopwatchState = function(){
      // Clears the intervals of the other app states, if they're currently set.
@@ -302,6 +281,28 @@ const clockCtrl = (function(){
     
   };
 
+  // function that hold the logic for the analogue clock
+  const playAnalogueClock = function(){
+    const today = new Date();
+    const second = today.getSeconds();
+    const minute = today.getMinutes();
+    const hour = today.getHours();
+    // calculate the degrees for each hand
+    const secondDeg = second * 6;
+    const minuteDeg = (minute * 6) + (1/60)*secondDeg;
+    const hourDeg = ((hour%12) * 30) + (1/12)*minuteDeg;
+  
+    console.log(secondDeg, minuteDeg, hourDeg);
+  
+    UICtrl.UIElements.secondHand.style.transition = 'all ease 0.5s';
+    if (secondDeg === 0 || secondDeg === 360){
+      UICtrl.UIElements.secondHand.style.transition = 'none';
+    };
+    // rotate each hand using the transform: rotate() css property using the angles calculated
+    UICtrl.UIElements.secondHand.style.transform = `translate(50%, 1rem) rotate(${secondDeg}deg)`;
+    UICtrl.UIElements.minuteHand.style.transform = `translate(50%, 1rem) rotate(${minuteDeg}deg)`;
+    UICtrl.UIElements.hourHand.style.transform = `translate(50%, 1rem) rotate(${hourDeg}deg)`;
+  };
   // A pause function that is called when the pause button is clicked and execute the set of logic.
   const pause = function(){
     // Grab the current values

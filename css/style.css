@@ -5,9 +5,6 @@ svg.fa-sort-up, svg.fa-sort-down{
 .arrows, #toggle-on, #toggle-off{
   vertical-align: middle;
 }
-#toggle-on, #toggle-off{
-  transition: all ease 5s;
-}
 .analogue-clock{
   width: 250px;
   height: 250px;
