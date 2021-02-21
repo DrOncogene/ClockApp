@@ -21,6 +21,7 @@ const UICtrl = (function (){
     secondHand: document.getElementById('analogue-second'),
     minuteHand: document.getElementById('analogue-minute'),
     hourHand: document.getElementById('analogue-hour'),
+    changeFaceBtn: document.getElementById('change-face-btn'),
   };
 
   // UI class constructor with a single property 'state'. The default state is 'clock'
@@ -159,6 +160,7 @@ const clockCtrl = (function(){
     UICtrl.show(UICtrl.UIElements.analogueToggle);
     UICtrl.show(UICtrl.UIElements.analogueToggleOff);
     UICtrl.hide(UICtrl.UIElements.analogueToggleOn);
+    UICtrl.hide(UICtrl.UIElements.changeFaceBtn);
     // Shows the colons in case they have been hidden when switching over from the timer state where they are hidden. Same for the hideArrows().
     UICtrl.showColons();
     UICtrl.hideArrows();
@@ -465,6 +467,8 @@ const App = (function(UICtrl, clockCtrl){
         UICtrl.hide(UICtrl.UIElements.analogueToggleOff);
         // show toggle on
         UICtrl.show(UICtrl.UIElements.analogueToggleOn);
+        // show change face button
+        UICtrl.show(UICtrl.UIElements.changeFaceBtn);
         // clear the digital clock interval
         clearInterval(clockCtrl.intervalIds.clockId);
         // set analogue clock interval
@@ -495,6 +499,12 @@ const App = (function(UICtrl, clockCtrl){
           clockCtrl.intervalIds.clockId = id;
         }, 0);
       }
+    });
+    // Change clock face event listener
+    UICtrl.UIElements.changeFaceBtn.addEventListener('click', (e)=>{
+      const imgs = ['clockface1.jpeg', 'clockface2.jpeg', 'clockface3.png', 'clockface4.jpeg', 'infinite.jpg'];
+      const index = Math.floor(Math.random()*(imgs.length));
+      UICtrl.UIElements.analogueClock.style.backgroundImage = `url(../img/${imgs[index]})`;
     });
   };
 

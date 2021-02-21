@@ -13,8 +13,7 @@ svg.fa-sort-up, svg.fa-sort-down{
   border-radius: 50%;
   position: relative;
   box-shadow: 0px 0px 15px 5px #333;
-  background: url(../img/clockface\ 2.jpeg) center center no-repeat;
-  /* background-clip: border-box; */
+  background: url(../img/clockface2.jpeg) center center no-repeat;
   background-size: cover;
 }
 span#circle{
