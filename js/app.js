@@ -10,7 +10,7 @@ const UICtrl = (function (){
     seconds: document.querySelector('#seconds'),
     playBtn: document.querySelector('#play-btn'),
     pauseBtn: document.querySelector('#pause-btn'),
-    restartBtn: document.querySelector('#restart-btn'),
+    resetBtn: document.querySelector('#restart-btn'),
     colons: document.querySelectorAll('.colon'),
     arrowBtns: document.querySelectorAll('.arrows'),
   };
@@ -144,7 +144,7 @@ const clockCtrl = (function(){
     // Hides all the buttons
     UICtrl.hide(UICtrl.UIElements.playBtn);
     UICtrl.hide(UICtrl.UIElements.pauseBtn);
-    UICtrl.hide(UICtrl.UIElements.restartBtn);
+    UICtrl.hide(UICtrl.UIElements.resetBtn);
     // Shows the colons in case they have been hidden when switching over from the timer state where they are hidden. Same for the hideArrows().
     UICtrl.showColons();
     UICtrl.hideArrows();
@@ -164,13 +164,13 @@ const clockCtrl = (function(){
     // Show the play and restart button and hide the pause button
     UICtrl.show(UICtrl.UIElements.playBtn);
     UICtrl.hide(UICtrl.UIElements.pauseBtn);
-    UICtrl.show(UICtrl.UIElements.restartBtn);
+    UICtrl.show(UICtrl.UIElements.resetBtn);
     // Shows the colons in case they have been hidden when switching over from the timer state where they are hidden. Same for the hideArrows().
     UICtrl.showColons();
     UICtrl.hideArrows();
   };
 
-  // An timerState function that is called when the app state is 'stopwatch'
+  // An timerState function that is called when the app state is 'timer'
   const timerState = function(){
     // Clears the intervals of the other app states, if they're currently set.
     clearInterval(intervalIds.stopwatchId);
@@ -184,7 +184,7 @@ const clockCtrl = (function(){
     // Show the play and restart button and hide the pause button
     UICtrl.show(UICtrl.UIElements.playBtn);
     UICtrl.hide(UICtrl.UIElements.pauseBtn);
-    UICtrl.show(UICtrl.UIElements.restartBtn);
+    UICtrl.show(UICtrl.UIElements.resetBtn);
     // Shows the colons in case they have been hidden when switching over from the timer state where they are hidden. Same for the hideArrows().
     UICtrl.showArrows();
     UICtrl.hideColons();
@@ -307,7 +307,7 @@ const clockCtrl = (function(){
 const App = (function(UICtrl, clockCtrl){
   // Instantiate a new UI object
   const UI = new UICtrl.UI;
-  // Load event listners function to call all event listeners
+  // Load event listners function to set all event listeners
   const loadEventListners = function(){
     // Clock button event listner to change the app state to 'clock'
     UICtrl.UIElements.clockBtn.addEventListener('click', () => {
@@ -378,7 +378,7 @@ const App = (function(UICtrl, clockCtrl){
       };
     });
     // Reset button event listener
-    UICtrl.UIElements.restartBtn.addEventListener('click', (e)=>{
+    UICtrl.UIElements.resetBtn.addEventListener('click', (e)=>{
       if (e.target.hasAttribute('fill') || e.target.classList.contains('fa-sync-alt')){
         clockCtrl.reset();
       };
@@ -429,5 +429,5 @@ const App = (function(UICtrl, clockCtrl){
   };
 })(UICtrl, clockCtrl);
 
-// App entry point to initialize the app by calling this init() function
+// App entry point to initialize the app by calling the app init() function
 App.init();
