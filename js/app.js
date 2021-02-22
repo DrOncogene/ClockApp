@@ -503,7 +503,7 @@ const App = (function(UICtrl, clockCtrl){
     // Change clock face event listener
     UICtrl.UIElements.changeFaceBtn.addEventListener('click', ()=>{
       // Array of all faces available
-      const imgs = ['clockface1.jpeg', 'clockface2.jpeg', 'clockface3.png', 'clockface4.jpeg', 'infinite.jpg'];
+      const imgs = ['clockface1.jpeg', 'clockface2.jpeg', 'clockface3.png', 'clockface4.jpeg'];
       // Generate a random index
       const index = Math.floor(Math.random()*(imgs.length));
       // Use random index to change the background image/clock face
